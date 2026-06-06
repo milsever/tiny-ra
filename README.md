@@ -7,7 +7,7 @@ You can access data related to this paper on Mendeley Data (link).
 Positional (first) script parameter, `root`, serves two functions depending on whether `meta-cat` is defined. If `meta-cat` is not defined, `root` represents the `path to dataset` (for example `data/CIFAR10`). If `meta-cat` is defined, dataset is Retail-YU, and path to meta-category dataset is formed in the following way: `{retail_yu_root}/{meta_cat}/shelf/{root}`. `retail_yu_root` is defined in `trainer_base.py` and should be set before using the script. In this context `root` represents a specific split of the meta-category data. Distance-aware split (DAS) used in this study is discussed in the following section. It is coded as `resnet50-das.42`. For example, distance-aware split of the cleaning meta-category is defined by positional `root` and `meta-cat`: `python train.py resnet50-das.42 --meta-cat cleaning ...`
 
 <p align="center">
-  <img src="media/script_params_table.svg" width="100%" alt="Script parameters table">
+  <img src="media/script_params_table.png" width="100%" alt="Script parameters table">
 </p>
 
 ## `--sops-mode` parameter

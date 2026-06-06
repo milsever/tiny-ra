@@ -133,6 +133,6 @@ python evaluate.py mt_search_hard_ops/1000 --exps 0..44 --get-results val
 /arf/scratch/milsever/datasets/cifar10 --result-dir policy_learn --arch resnet18 --ftune-head fcn --learning-method mt-rand-aug -e 75 -bs 64 --optimizer SGD -lr 1e-2 --lr-sched -es --es-epoch 30 --t-params-start-epoch 5 --t-params-es-epoch 25 --t-params-lr 2e-3 5e-3 --t-params-bs 32 --t-params-mom 0.9 --t-params-lambda 1. 5. --t-params-lambda-ent .1 .0 --num-workers 8 --num-labeled 0.2 --seed 1000 --sops-mode sops_hl_hf_hf --iters-per-epoch 157 --t-params-advers
 ```
 
-[^1]: https://github.com/camall3n/onager
+[^1]: Onager (https://github.com/camall3n/onager)
 
 [^2]: Turkish National e-Science e-Infrastructure (<https://www.truba.gov.tr>)

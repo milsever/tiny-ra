@@ -1,6 +1,6 @@
 # Tiny-RandAugment: An Efficient and Automatic Data Augmentation Pipeline for Semi-Supervised Learning
 
-You can access data related to this paper on Mendeley Data (link).
+You can access data related to this paper on [Mendeley Data](https://data.mendeley.com/drafts/z6jdbh25gv).
 
 ## Script Parameters
 
@@ -51,7 +51,7 @@ python train.py resnet50-das.42 *** --num-labeled 0.05 --meta-cat snacks --seed 
 
 The Retail-YU dataset contains many visually similar images within each class. When these images are randomly assigned to the training, validation, and test sets, the resulting distributions may substantially overlap. In our experiments, we observed that deep models could achieve very high accuracy with only a small number of labeled samples under such a random split. To create a more challenging evaluation setting and increase the distribution shift between the training, validation, and test sets, we applied a distance-aware splitting strategy.
 
-First, features were extracted for all samples using a pre-trained ResNet-50 model and stored. These feature vectors were then reduced to 10 dimensions using UMAP [2]. For each class, the following procedure was applied:
+First, features were extracted for all samples using a pre-trained ResNet-50 model and stored. These feature vectors were then reduced to 10 dimensions using UMAP. For each class, the following procedure was applied:
 
 1)  The centroid of the 10-D feature representations of all in-class samples was computed.
 
@@ -67,7 +67,7 @@ First, features were extracted for all samples using a pre-trained ResNet-50 mod
 
 This procedure was repeated independently for each class. Since the split was generated using ResNet-50 features with a random seed of 42, we refer to this split as `resnet50-das.42`.
 
-You can download `resnet50-das.42` from Mendeley Data (link).
+You can download `resnet50-das.42` from [Mendeley Data](https://data.mendeley.com/drafts/z6jdbh25gv).
 
 <p align="center">
   <img src="media/image1.jpeg" alt="Figure 1. Step (2) The sample farthest from the cluster centroid is selected as the first test sample" width="60%">

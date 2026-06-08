@@ -158,7 +158,9 @@ python train.py cifar10 --result-dir policy_learn --arch resnet18 --ftune-head f
 **Figure 12 (a)** Mixing min-loss policy and max-loss policy.
 
 Onager command for mixture rate (-amr) 0.0:
+```bash
 onager prelaunch +jobname amr_0p +command "python train.py cifar10 --result-dir amr_cifar10/0p --arch resnet34 --ftune-head fcn --learning-method policy-evaluate -bs 64 --optimizer SGD -lr 1e-2 --lr-sched -es --patience 1.2 --consistency 0 --num-workers 8 -nl 0.2 --sops-mode sops_hf_hf_hf --iters-per-epoch 157 --t-probs-exp policy_learn/000 --t-adv-probs-exp policy_learn/001 -e 75 -amr 0.0" +arg --seed 1000 1001 1002 1003 1004 1005 1006
+```
 
 - 6 onager sessions over `-amr={0.0,0.2,0.4,0.6,0.8,1.0}`
 

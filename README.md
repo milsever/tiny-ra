@@ -108,10 +108,11 @@ You can download `resnet50-das.42` from [Mendeley Data](https://data.mendeley.co
 Onager command for seed=1000:
 
 ```bash
-onager prelaunch +jobname mt_hard_1000 resnet50-das.42 --result-dir mt_search_hard_ops/1000 --arch resnet34 \
---learning-method mean-teacher -e 75 -bs 16 --ubs 64 -lr 0.01 --lr-sched --optimizer SGD --ema-decay 0.99 --consistency-type mse \
---consistency 500 --consistency-rampup 10 --seed 1000 --num-workers 8 --num-labels 0.1 --meta-cat snacks \
-+arg --color-op Bri Sat Con Hue Blur Sharp Post Solar Equal --geom-op ShearX ShearY TranslateX TranslateY Rotate
+onager prelaunch +jobname mt_hard_1000 resnet50-das.42 --result-dir mt_search_hard_ops/1000 \
+--arch resnet34 --learning-method mean-teacher -e 75 -bs 16 --ubs 64 -lr 0.01 --lr-sched \
+--optimizer SGD --ema-decay 0.99 --consistency-type mse --consistency 500 --consistency-rampup 10 \
+--seed 1000 --num-workers 8 --num-labels 0.1 --meta-cat snacks +arg --color-op Bri Sat Con Hue Blur Sharp Post Solar Equal \
++arg --geom-op ShearX ShearY TranslateX TranslateY Rotate
 ```
 
 - 3 onager sessions over `--seed=1000/1001/1002`
@@ -129,16 +130,21 @@ python evaluate.py mt_search_hard_ops/1000 --exps 0..44 --get-results val
 **Figure 13 (a)** Min-loss Policy
 
 ```bash
-python train.py cifar10 --result-dir policy_learn --arch resnet18 --ftune-head fcn --learning-method mt-rand-aug -e 75 -bs 64 --optimizer SGD -lr 1e-2 --lr-sched -es --es-epoch 30 --t-params-start-epoch 5 --t-params-es-epoch 25 --t-params-lr 2e-3 5e-3 --t-params-bs 32 --t-params-mom 0.9 --t-params-lambda 1. 5. --t-params-lambda-ent .1 .0 --num-workers 8 --num-labeled 0.2 --seed 1000 --sops-mode sops_hl_hf_hf --iters-per-epoch 157
+python train.py cifar10 --result-dir policy_learn --arch resnet18 --ftune-head fcn \
+--learning-method mt-rand-aug -e 75 -bs 64 --optimizer SGD -lr 1e-2 --lr-sched -es --es-epoch 30 \
+--t-params-start-epoch 5 --t-params-es-epoch 25 --t-params-lr 2e-3 5e-3 --t-params-bs 32 \
+--t-params-mom 0.9 --t-params-lambda 1. 5. --t-params-lambda-ent .1 .0 --num-workers 8 \
+--num-labeled 0.2 --seed 1000 --sops-mode sops_hl_hf_hf --iters-per-epoch 157
 ```
 
 **Figure 13 (b)** Max-loss Policy
 
 ```bash
-python train.py cifar10 --result-dir policy_learn --arch resnet18 --ftune-head fcn --learning-method mt-rand-aug -e 75 -bs 64 \
---optimizer SGD -lr 1e-2 --lr-sched -es --es-epoch 30 --t-params-start-epoch 5 --t-params-es-epoch 25 --t-params-lr 2e-3 0 \
---t-params-bs 32 --t-params-mom 0.9 --t-params-lambda 1. 0. --t-params-lambda-ent .1 .0 --num-workers 8 --num-labeled 0.2 \
---seed 1000 --sops-mode sops_hl_hf_hf --iters-per-epoch 157 --t-params-advers
+python train.py cifar10 --result-dir policy_learn --arch resnet18 --ftune-head fcn \
+--learning-method mt-rand-aug -e 75 -bs 64 --optimizer SGD -lr 1e-2 --lr-sched -es --es-epoch 30 \
+--t-params-start-epoch 5 --t-params-es-epoch 25 --t-params-lr 2e-3 0 --t-params-bs 32 \
+--t-params-mom 0.9 --t-params-lambda 1. 0. --t-params-lambda-ent .1 .0 --num-workers 8 \
+--num-labeled 0.2 --seed 1000 --sops-mode sops_hl_hf_hf --iters-per-epoch 157 --t-params-advers
 ```
 
 - Single training run for both figures. Runs create  `000-`and `001-` experiments under `policy_learn`. Policy learning stops at epoch 25 (`--t-params-es-epoch 25`). Only class_geom_probs.csv and class_intens_probs.csv are updated as `--consistency` takes default `None` value (when not defined). `cons_***_probs.csv` files are irrelavent as `--consistency` is not defined.

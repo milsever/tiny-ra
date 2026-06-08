@@ -47,7 +47,7 @@ python train.py resnet50-das.42 *** --num-labeled 0.1 --meta-cat cleaning --seed
 python train.py resnet50-das.42 *** --num-labeled 0.05 --meta-cat snacks --seed 1004
 ```
 
-## Distance-aware split of Retail-YU [mendeley DOI] dataset
+## Distance-aware split of [Retail-YU](https://data.mendeley.com/datasets/mmcf24t9vv) dataset
 
 The Retail-YU dataset contains many visually similar images within each class. When these images are randomly assigned to the training, validation, and test sets, the resulting distributions may substantially overlap. In our experiments, we observed that deep models could achieve very high accuracy with only a small number of labeled samples under such a random split. To create a more challenging evaluation setting and increase the distribution shift between the training, validation, and test sets, we applied a distance-aware splitting strategy.
 

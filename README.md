@@ -23,7 +23,9 @@ Based on our experiments and following the weak/strong augmentation distinction 
 We use Onager[^1], a tool for sending batch of jobs to TRUBA[^2]. Onager creates SLURM commands for permutations of script parameters through its `+arg` parameter. It is commonly used for hyperparameter search, but in our study, we mostly used it for getting average accuracy over some parameters. For example, to create supervised training commands for parameters (1) 20%, 10% and 5% of the labels used, (2) each meta-category of Retail-YU dataset and (3) seeds 1000-1004, call `prelaunch` subcommand of Onager as follows:
 
 ```bash
-onager prelaunch +jobname sv_lbl_rat +command "python train.py resnet50-das.42 --result-dir temp --arch resnet34 -e 90 -bs 64 -lr 0.01 --lr-sched --optimizer SGD --learning-method supervised" +arg --num-labeled 0.2 0.1 0.05 +arg meta-cat cleaning drinks personalcare snacks +arg --seed {1000..1004}
+onager prelaunch +jobname sv_lbl_rat +command "python train.py resnet50-das.42 --result-dir temp \
+--arch resnet34 -e 90 -bs 64 -lr 0.01 --lr-sched --optimizer SGD --learning-method supervised" \
++arg --num-labeled 0.2 0.1 0.05 +arg meta-cat cleaning drinks personalcare snacks +arg --seed {1000..1004}
 ```
 
 This command creates 3x4x5=60 jobs where each of them runs the training script for one

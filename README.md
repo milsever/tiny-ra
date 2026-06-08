@@ -105,7 +105,7 @@ You can download `resnet50-das.42` from [Mendeley Data](https://data.mendeley.co
 
 **Table 4 Caption:** Individual policies ranked by average accuracy of the ResNET-34 model over 3 training runs with the setting {learning method: mean-teacher, augmenter: 2-stage policies, data: snacks (10%)}.
 
-Onager command for seed=1000:
+Onager command for seed 1000:
 
 ```bash
 onager prelaunch +jobname mt_hard_1000 resnet50-das.42 --result-dir mt_search_hard_ops/1000 \
@@ -115,7 +115,7 @@ onager prelaunch +jobname mt_hard_1000 resnet50-das.42 --result-dir mt_search_ha
 +arg --geom-op ShearX ShearY TranslateX TranslateY Rotate
 ```
 
-- 3 onager sessions over `--seed=1000/1001/1002`
+- 3 onager sessions over `--seed={1000,1001,1002}`
 
 - Permutation sets at each session: `--color-op` = ["Bri", "Sat", "Con", "Hue", "Blur", "Sharp", "Post", "Solar", "Equal"], `--geom-op` = ["ShearX", "ShearY", "TranslateX", "TranslateY", "Rotate"]
 
@@ -142,20 +142,31 @@ python train.py cifar10 --result-dir policy_learn --arch resnet18 --ftune-head f
 **Figure 11 (b)** Max-loss Policy
 
 ```bash
-python train.py cifar10 --result-dir policy_learn --arch resnet18 --ftune-head fcn \
---learning-method mt-rand-aug -e 75 -bs 64 --optimizer SGD -lr 1e-2 --lr-sched -es --es-epoch 30 \
---t-params-start-epoch 5 --t-params-es-epoch 25 --t-params-lr 2e-3 0 --t-params-bs 32 \
---t-params-mom 0.9 --t-params-lambda 1. 0. --t-params-lambda-ent .1 .0 --num-workers 8 \
---num-labeled 0.2 --seed 1000 --sops-mode sops_hl_hf_hf --iters-per-epoch 157 --t-params-advers
+### --t-params-advers
 ```
 
-- Single training run for both figures. Runs create  `000-`and `001-` experiments under `policy_learn` folder. Policy learning stops at epoch 25 (`--t-params-es-epoch 25`). Only class_geom_probs.csv and class_intens_probs.csv are updated as `--consistency` takes default `None` value (when not defined). `cons_***_probs.csv` files are irrelavent as `--consistency` is not defined.
+- Single training run for both figures. Runs create  `000-`and `001-` experiments under `policy_learn` folder. Policy learning stops at epoch 25 (`--t-params-es-epoch 25`). Only *class_geom_probs.csv* and *class_intens_probs.csv* are updated as `--consistency` takes default `None` value (when not defined). `cons_***_probs.csv` files are irrelavent as `--consistency` is not defined.
 
 - Since the policy is trained only using the classification loss in this experiment, `--sops-mode` is set to `sops_hl_hf_hf`.
 
-- `--t-params-advers` switch of Figure 13(b) command turns on the maximum loss objective.
+- \### is a placeholder for Figure 11(a) command. `--t-params-advers` of Figure 11(b) turns on the maximum loss objective.
 
 - A slight entropy regularization on parameters of geom. operations as their distribution can become rapidly peaked in some configurations (`--t-params-lambda-ent`).
+
+**Figure 12 Caption:** Geometric and color operator distributions under the policy-mixing strategy for (a) min-/max-loss mixing and (b) min-loss/random mixing. The mixing factor $\alpha$ is swept over {0.0,0.2,0.4,0.6,0.8,1.0}. $\alpha^*$ indicates maximum entropy point.
+
+**Figure 12 (a)** Mixing min-loss policy and max-loss policy.
+
+Onager command for mixture rate (-amr) 0.0:
+onager prelaunch +jobname amr_0p +command "python train.py cifar10 --result-dir amr_cifar10/0p --arch resnet34 --ftune-head fcn --learning-method policy-evaluate -bs 64 --optimizer SGD -lr 1e-2 --lr-sched -es --patience 1.2 --consistency 0 --num-workers 8 -nl 0.2 --sops-mode sops_hf_hf_hf --iters-per-epoch 157 --t-probs-exp policy_learn/000 --t-adv-probs-exp policy_learn/001 -e 75 -amr 0.0" +arg --seed 1000 1001 1002 1003 1004 1005 1006
+
+- 6 onager sessions over `-amr={0.0,0.2,0.4,0.6,0.8,1.0}`
+
+- `--t-probs-exp` and `--t-adv-probs-exp` refers to learned policies from Figure 11's trainings.
+
+- We observed stable "U-shaped validation loss" pattern in supervised training on CIFAR10. Hence we turned on early-stopping (-es) in these experiments.
+
+- For faster experimentation, training was conducted on a 20% subset of CIFAR-10.
 
 [^1]: Onager (https://github.com/camall3n/onager)
 

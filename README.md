@@ -142,33 +142,47 @@ python train.py cifar10 --result-dir policy_learn --arch resnet18 --ftune-head f
 **Figure 11 (b)** Max-loss Policy
 
 ```bash
-### --t-params-advers
+python train.py *** --t-params-advers
 ```
 
 - Single training run for both figures. Runs create  `000-`and `001-` experiments under `policy_learn` folder. Policy learning stops at epoch 25 (`--t-params-es-epoch 25`). Only *class_geom_probs.csv* and *class_intens_probs.csv* are updated as `--consistency` takes default `None` value (when not defined). `cons_***_probs.csv` files are irrelavent as `--consistency` is not defined.
 
 - Since the policy is trained only using the classification loss in this experiment, `--sops-mode` is set to `sops_hl_hf_hf`.
 
-- \### is a placeholder for Figure 11(a) command. `--t-params-advers` of Figure 11(b) turns on the maximum loss objective.
+- *** holds overlapping parts to Figure 11(a) command. `--t-params-advers` of Figure 11(b) turns on the maximum loss objective.
 
 - A slight entropy regularization on parameters of geom. operations as their distribution can become rapidly peaked in some configurations (`--t-params-lambda-ent`).
 
-**Figure 12 Caption:** Geometric and color operator distributions under the policy-mixing strategy for (a) min-/max-loss mixing and (b) min-loss/random mixing. The mixing factor $\alpha$ is swept over {0.0,0.2,0.4,0.6,0.8,1.0}. $\alpha^*$ indicates maximum entropy point.
+**Figure 12 Caption:** Geometric and color operator distributions under the policy-mixing strategy for (a) min-/max-loss mixing and (b) min-loss/random mixing. The mixing factor $\alpha$ is swept over {0.0, 0.2, 0.4, 0.6, 0.8, 1.0}. $\alpha^*$ indicates maximum entropy point.
 
 **Figure 12 (a)** Mixing min-loss policy and max-loss policy.
 
 Onager command for mixture rate (-amr) 0.0:
 ```bash
-onager prelaunch +jobname amr_0p +command "python train.py cifar10 --result-dir amr_cifar10/0p --arch resnet34 --ftune-head fcn --learning-method policy-evaluate -bs 64 --optimizer SGD -lr 1e-2 --lr-sched -es --patience 1.2 --consistency 0 --num-workers 8 -nl 0.2 --sops-mode sops_hf_hf_hf --iters-per-epoch 157 --t-probs-exp policy_learn/000 --t-adv-probs-exp policy_learn/001 -e 75 -amr 0.0" +arg --seed 1000 1001 1002 1003 1004 1005 1006
+onager prelaunch +jobname amr_0r +command "python train.py cifar10 --result-dir amr_cifar10/0r --arch resnet34 \
+--ftune-head fcn --learning-method policy-evaluate -bs 64 --optimizer SGD -lr 1e-2 --lr-sched -es --patience 1.2 \
+--consistency 0 --num-workers 8 -nl 0.2 --sops-mode sops_hf_hf_hf --iters-per-epoch 157 \
+--t-probs-exp policy_learn/000 --t-adv-probs-exp policy_learn/001 -e 75 -amr 0.0" \
++arg --seed 1000 1001 1002 1003 1004 1005 1006
+```
+
+**Figure 12 (b)** Mixing min-loss policy and random policy.
+
+Onager command for mixture rate (-amr) 0.2:
+```bash
+onager prelaunch +jobname rmr_20r +command "python train.py cifar10 --result-dir amr_cifar10/20r \
+*** --t-probs-exp policy_learn/000 --t-adv-probs-exp policy_learn/002 -e 75 -amr 0.2" \
++arg --seed 1000 1001 1002 1003 1004 1005 1006
 ```
 
 - 6 onager sessions over `-amr={0.0,0.2,0.4,0.6,0.8,1.0}`
 
-- `--t-probs-exp` and `--t-adv-probs-exp` refers to learned policies from Figure 11's trainings.
+- *** holds overlapping parts to Figure 12(a) command. `--t-probs-exp` and `--t-adv-probs-exp` refers to learned policies from Figure 11's trainings. `--t-adv-probs-exp` refers to uniform distribution in Figure 12(b) (`policy_learn/002-randaug-cifar10`)
 
-- We observed stable "U-shaped validation loss" pattern in supervised training on CIFAR10. Hence we turned on early-stopping (-es) in these experiments.
+- We observed stable "U-shaped validation loss" pattern in supervised training on CIFAR10. Hence we turned on early-stopping (`-es`) in these experiments.
 
-- For faster experimentation, training was conducted on a 20% subset of CIFAR-10.
+- For faster experimentation, training was conducted on a 20% subset of CIFAR-10 (`-nl 0.2`).
+
 
 [^1]: Onager (https://github.com/camall3n/onager)
 

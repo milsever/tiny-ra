@@ -103,7 +103,7 @@ You can download `resnet50-das.42` from [Mendeley Data](https://data.mendeley.co
 
 ## Section 4.1.2: Mean-teacher Performance of Two-stage Policies
 
-**Table 7 Caption:** Individual policies ranked by average accuracy of the ResNET-34 model over 3 training runs with the setting {learning method: mean-teacher, augmenter: 2-stage policies, data: snacks (10%)}.
+**Table 4 Caption:** Individual policies ranked by average accuracy of the ResNET-34 model over 3 training runs with the setting {learning method: mean-teacher, augmenter: 2-stage policies, data: snacks (10%)}.
 
 Onager command for seed=1000:
 
@@ -127,7 +127,9 @@ python evaluate.py mt_search_hard_ops/1000 --exps 0..44 --get-results val
 
 ## Section 4.1.4: Mixing Learned Policies with Adversarial and Random Policies
 
-**Figure 13 (a)** Min-loss Policy
+**Figure 11 Caption:** Geometric and color operator distributions for min- and max-loss policies.
+
+**Figure 11 (a)** Min-loss Policy
 
 ```bash
 python train.py cifar10 --result-dir policy_learn --arch resnet18 --ftune-head fcn \
@@ -137,7 +139,7 @@ python train.py cifar10 --result-dir policy_learn --arch resnet18 --ftune-head f
 --num-labeled 0.2 --seed 1000 --sops-mode sops_hl_hf_hf --iters-per-epoch 157
 ```
 
-**Figure 13 (b)** Max-loss Policy
+**Figure 11 (b)** Max-loss Policy
 
 ```bash
 python train.py cifar10 --result-dir policy_learn --arch resnet18 --ftune-head fcn \
@@ -147,13 +149,13 @@ python train.py cifar10 --result-dir policy_learn --arch resnet18 --ftune-head f
 --num-labeled 0.2 --seed 1000 --sops-mode sops_hl_hf_hf --iters-per-epoch 157 --t-params-advers
 ```
 
-- Single training run for both figures. Runs create  `000-`and `001-` experiments under `policy_learn`. Policy learning stops at epoch 25 (`--t-params-es-epoch 25`). Only class_geom_probs.csv and class_intens_probs.csv are updated as `--consistency` takes default `None` value (when not defined). `cons_***_probs.csv` files are irrelavent as `--consistency` is not defined.
+- Single training run for both figures. Runs create  `000-`and `001-` experiments under `policy_learn` folder. Policy learning stops at epoch 25 (`--t-params-es-epoch 25`). Only class_geom_probs.csv and class_intens_probs.csv are updated as `--consistency` takes default `None` value (when not defined). `cons_***_probs.csv` files are irrelavent as `--consistency` is not defined.
 
 - Since the policy is trained only using the classification loss in this experiment, `--sops-mode` is set to `sops_hl_hf_hf`.
 
 - `--t-params-advers` switch of Figure 13(b) command turns on the maximum loss objective.
 
-- A slight entropy regularization on parameters of geom. operations as their distribution can become rapidly peaked in some configurations.
+- A slight entropy regularization on parameters of geom. operations as their distribution can become rapidly peaked in some configurations (`--t-params-lambda-ent`).
 
 [^1]: Onager (https://github.com/camall3n/onager)
 

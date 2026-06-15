@@ -162,8 +162,7 @@ Onager command for mixture rate (-amr) 0.0:
 onager prelaunch +jobname amr_0r +command "python train.py cifar10 --result-dir amr_cifar10/0r --arch resnet34 \
 --ftune-head fcn --learning-method policy-evaluate -e 75 -bs 64 --optimizer SGD -lr 1e-2 --lr-sched -es --patience 1.2 \
 --consistency 0 --num-workers 8 -nl 0.2 --sops-mode sops_hf_hf_hf --iters-per-epoch 157 \
---t-probs-exp policy_learn/000 --t-adv-probs-exp policy_learn/001 -amr 0.0" \
-+arg --seed 1000 1001 1002 1003 1004 1005 1006
+--t-probs-exp policy_learn/000 --t-adv-probs-exp policy_learn/001 -amr 0.0" +arg --seed {1000..1006}
 ```
 
 **Figure 13 (b)** Min-loss/Random Policy Mixture
@@ -171,11 +170,10 @@ onager prelaunch +jobname amr_0r +command "python train.py cifar10 --result-dir 
 Onager command for mixture rate (-amr) 0.2:
 ```bash
 onager prelaunch +jobname rmr_20r +command "python train.py cifar10 --result-dir rmr_cifar10/20r \
-*** --t-probs-exp policy_learn/000 --t-adv-probs-exp policy_learn/002 -amr 0.2" \
-+arg --seed 1000 1001 1002 1003 1004 1005 1006
+*** --t-probs-exp policy_learn/000 --t-adv-probs-exp policy_learn/002 -amr 0.2" +arg --seed {1000..1006}
 ```
 
-- 6 onager sessions over `-amr={0.0,0.2,0.4,0.6,0.8,1.0}`. Policy-mixing evaluated at some intermediate values for Figure 13(b): `-amr={0.25,0.5,0.75}`.
+- 6 onager sessions over `-amr={0.0,0.2,0.4,0.6,0.8,1.0}` leading to experiment subfolders formatted as `f"{amr * 100}r"`. Policy-mixing evaluated at some intermediate values for Figure 13(b): `-amr={0.25,0.5,0.75}`.
 
 - *** holds overlapping parts to Figure 13(a) command. `--t-probs-exp` and `--t-adv-probs-exp` refers to learned policies from Figure 11's trainings. In Figure 13(b), `--t-adv-probs-exp` refers to uniform distribution (`policy_learn/002-randaug-cifar10`)
 
@@ -183,13 +181,49 @@ onager prelaunch +jobname rmr_20r +command "python train.py cifar10 --result-dir
 
 - For faster experimentation, training was conducted on a 20% split of CIFAR-10 (`-nl 0.2`).
 
-- **Aggregate Results:** Collect results in each subfolder corresponding to an -amr value: "{amr * 100}r". For example, if amr=0.4, call the following command.
+- **Aggregate Results:** For example, for amr=0.4, call the following command.
 
 ```bash
 python evaluate.py rmr_cifar10/40r --exps 0..9 --get-results val --best-from-avg
 ```
 
+## Section 4.2.3: Baseline: Tiny-RA without Policy Learning
 
+**Figure 14.** Average mean-teacher accuracy of Tiny-RA (no-learn) for each meta-category of Retail-YU and for labeled data ratios of 10%, 5% and 1%.
+
+Onager command for labeled data ration 10% (`-nl 0.1`):
+```bash
+onager prelaunch +jobname sops_ef_hf_ef_10p +command "python train.py resnet50-das.42 --result-dir sops_ef_hf_ef/10p \
+--arch resnet34 --learning-method mt-rand-aug -e 75 -bs 16 --unlabeled-batch-size 64 --optimizer SGD -lr 1e-2 --lr-sched \
+--ema-decay 0.99 --consistency-type mse --consistency 500 --consistency-rampup 10 --sops-mode sops_ef_hf_ef \
+--no-t-params-update --num-workers 8 -nl 0.1" +arg --meta-cat cleaning drinks personalcare snacks +arg --seed {1000..1009}
+```
+
+- 3 onager sessions over `-nl={0.1,0.05,0.01}` leading to experiment subfolders 10p, 5p and 1p.
+
+- `--no-t-params-update` ensures that the operator probabilities remain constant (and equal) throughout training.
+
+- **Aggregate Results:** Collect results into a single .csv under each subfolder 10p, 5p and 1p.
+
+```bash
+python evaluate.py sops_ef_hf_ef/10p --exps 0..40 --get-results val --output-csv sops_ef_hf_ef_10p.csv
+```
+
+## Section 4.2.4:	Tiny-RA with Policy Learning
+
+**Figure 16. and Figure 18.** Geometric and color operator distributions for classification-path and consistency-path OSMs.
+
+Onager command:
+```bash
+onager prelaunch +jobname retailyu_pl +command "python resnet50-das.42 --result-dir policy_learn --arch resnet18 \
+--learning-method mt-rand-aug -e 75 -bs 16 -ubs 64 --optimizer SGD -lr 1e-2 --lr-sched -es --es-epoch 30 \
+--ema-decay 0.99 --consistency-type mse --consistency 500 --consistency-rampup 10 --t-params-start-epoch 5 \
+--t-params-es-epoch 25 --t-params-lr 2e-3 5e-3 --t-params-bs 32 --t-params-mom 0.9 --t-params-pl 1.0 \
+--t-params-lambda-ent .0 .0 --num-workers 8 -nl 0.1 -nu 0.9 --seed 1000 --sops-mode sops_hl_hf_hl \
++arg --meta-cat cleaning drinks personalcare snacks
+```
+
+ - Single onager session (above command) for meta-categories of Retail-YU.
 
 [^1]: Onager (https://github.com/camall3n/onager)
 

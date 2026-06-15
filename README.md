@@ -170,7 +170,7 @@ onager prelaunch +jobname amr_0r +command "python train.py cifar10 --result-dir 
 
 Onager command for mixture rate (-amr) 0.2:
 ```bash
-onager prelaunch +jobname rmr_20r +command "python train.py cifar10 --result-dir amr_cifar10/20r \
+onager prelaunch +jobname rmr_20r +command "python train.py cifar10 --result-dir rmr_cifar10/20r \
 *** --t-probs-exp policy_learn/000 --t-adv-probs-exp policy_learn/002 -amr 0.2" \
 +arg --seed 1000 1001 1002 1003 1004 1005 1006
 ```

@@ -193,10 +193,11 @@ python evaluate.py rmr_cifar10/40r --exps 0..9 --get-results val --best-from-avg
 
 Onager command for labeled data ration 10% (`-nl 0.1`):
 ```bash
-onager prelaunch +jobname sops_ef_hf_ef_10p +command "python train.py resnet50-das.42 --result-dir sops_ef_hf_ef/10p \
---arch resnet34 --learning-method mt-rand-aug -e 75 -bs 16 --unlabeled-batch-size 64 --optimizer SGD -lr 1e-2 --lr-sched \
---ema-decay 0.99 --consistency-type mse --consistency 500 --consistency-rampup 10 --sops-mode sops_ef_hf_ef \
---no-t-params-update --num-workers 8 -nl 0.1" +arg --meta-cat cleaning drinks personalcare snacks +arg --seed {1000..1009}
+onager prelaunch +jobname sops_ef_hf_ef_10p +command "python train.py resnet50-das.42 \
+--result-dir sops_ef_hf_ef/10p --arch resnet34 --learning-method mt-rand-aug -e 75 -bs 16 -ubs 64 \
+--optimizer SGD -lr 1e-2 --lr-sched --ema-decay 0.99 --consistency-type mse --consistency 500 \
+--consistency-rampup 10 --sops-mode sops_ef_hf_ef --no-t-params-update --num-workers 8 -nl 0.1" \
++arg --meta-cat cleaning drinks personalcare snacks +arg --seed {1000..1009}
 ```
 
 - 3 onager sessions over `-nl={0.1,0.05,0.01}` leading to experiment subfolders 10p, 5p and 1p.

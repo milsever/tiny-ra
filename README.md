@@ -25,7 +25,7 @@ We use Onager[^1], a tool for sending batch of jobs to TRUBA[^2]. Onager creates
 ```bash
 onager prelaunch +jobname sv_lbl_rat +command "python train.py resnet50-das.42 --result-dir temp \
 --arch resnet34 -e 90 -bs 64 -lr 0.01 --lr-sched --optimizer SGD --learning-method supervised" \
-+arg --num-labeled 0.2 0.1 0.05 +arg meta-cat cleaning drinks personalcare snacks +arg --seed {1000..1004}
++arg --num-labeled 0.2 0.1 0.05 +arg --meta-cat cleaning drinks personalcare snacks +arg --seed {1000..1004}
 ```
 
 This command creates 3x4x5=60 jobs where each of them runs the training script for one
@@ -103,7 +103,7 @@ You can download `resnet50-das.42` from [Mendeley Data](https://data.mendeley.co
 
 ## Section 4.1.1: Mean-teacher Performance of Two-stage Policies
 
-**Table 4** Individual policies ranked by average accuracy of the ResNET-34 model over 3 training runs with the setting {learning method: mean-teacher, augmenter: 2-stage policies, data: snacks (10%)}.
+**Table 4.** Individual policies ranked by average accuracy of the ResNET-34 model over 3 training runs with the setting {learning method: mean-teacher, augmenter: 2-stage policies, data: snacks (10%)}.
 
 Onager command for seed 1000:
 
@@ -183,7 +183,11 @@ onager prelaunch +jobname rmr_20r +command "python train.py cifar10 --result-dir
 
 - For faster experimentation, training was conducted on a 20% split of CIFAR-10 (`-nl 0.2`).
 
+- **Aggregate Results:** Collect results in each subfolder corresponding to an -amr value: "{amr * 100}r". For example, if amr=0.4, call the following command.
 
+```bash
+python evaluate.py rmr_cifar10/40r --exps 0..9 --get-results val --best-from-avg
+```
 
 
 

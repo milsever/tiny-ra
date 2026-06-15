@@ -220,7 +220,7 @@ onager prelaunch +jobname retailyu_pl +command "python resnet50-das.42 --result-
 --learning-method mt-rand-aug -e 75 -bs 16 -ubs 64 --optimizer SGD -lr 1e-2 --lr-sched -es --es-epoch 30 \
 --ema-decay 0.99 --consistency-type mse --consistency 500 --consistency-rampup 10 --t-params-start-epoch 5 \
 --t-params-es-epoch 25 --t-params-lr 2e-3 5e-3 --t-params-bs 32 --t-params-mom 0.9 --t-params-pl 1.0 \
---t-params-lambda-ent .0 .0 --num-workers 8 -nl 0.1 -nu 0.9 --seed 1000 --sops-mode sops_hl_hf_hl \
+--t-params-lambda-ent .0 .0 --num-workers 8 -nl 0.1 -nu 0.9 --seed 1000 --sops-mode sops_hl_hf_hl" \
 +arg --meta-cat cleaning drinks personalcare snacks
 ```
 

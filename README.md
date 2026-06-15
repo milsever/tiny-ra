@@ -12,9 +12,9 @@ Positional (first) script parameter, `root`, serves two functions depending on w
 
 ## `--sops-mode` parameter
 
-As described in Section 4.2.4, “Tiny-RA with Policy Learning,” Tiny-RA can be used at three different positions in the training pipeline, denoted as `aug_lbl`, `aug_stu`, and `aug_tea`. In the paper, policy learning is applied to `aug_lbl` and `aug_tea`, but not to `aug_stu`. Although the results reported in the paper are based on this configuration, the training script provides more flexibility.
+As described in Section 4.2.4, “Tiny-RA with Policy Learning,” Tiny-RA can be used at three different positions in the training pipeline, denoted as `aug_lbl`, `aug_stu`, and `aug_tea`. As pointed the paper, policy learning is applied to `aug_lbl` and `aug_tea`, but not to `aug_stu`. Although the results reported in the paper are based on this configuration, the training script provides more flexibility.
 
-The `--sops-mode` parameter specifies whether Tiny-RA is fixed or learned at each position and also controls its strength using two settings: easy and hard. Here, **SOPS** refers to “single operation per sample,” another naming for Tiny_RA which emphasizes that a different operation is applied to each sample. The `--sops-mode` argument follows the format `sops_{aug_lbl_mode}_{aug_stu_mode}_{aug_tea_mode}`. Each mode is represented by two letters. The first letter indicates the strength of Tiny-RA: ‘e’ denotes *easy*, in which the selected operation is applied with a probability of 50%, whereas ‘h’ denotes *hard*, in which the selected operation is always applied. The second letter indicates whether the policy is fixed or learned: ‘f’ denotes a fixed policy without policy learning, while ‘l’ denotes a learned policy.
+The `--sops-mode` parameter specifies whether Tiny-RA is fixed or learned at each position and also controls its strength using two settings: *easy* and *hard*. Here, **SOPS** refers to “single operation per sample,” another naming for Tiny_RA which emphasizes that a different operation is applied to each sample. The `--sops-mode` argument follows the format `sops_{aug_lbl_mode}_{aug_stu_mode}_{aug_tea_mode}`. Each mode is represented by two letters. The first letter indicates the strength of Tiny-RA: ‘e’ denotes *easy*, in which the selected operation is applied with a probability of 50%, whereas ‘h’ denotes *hard*, in which the selected operation is always applied. The second letter indicates whether the policy is fixed or learned: ‘f’ denotes a fixed policy without policy learning, while ‘l’ denotes a learned policy.
 
 Based on our experiments and following the weak/strong augmentation distinction used in UDA and FixMatch, we used *easy* mode for `aug_lbl` and `aug_tea` when evaluating the learned policies. However, during policy learning, we used *hard* mode at these positions to obtain more consistent gradient updates for the operator probabilities. Accordingly, the `--sops-mode` configuration was set to `sops_hl_hf_hl` during policy learning and to `sops_ef_hf_ef` during policy evaluation. In addition, in Section 4.2.3, “Baseline: Tiny-RA without Policy Learning,” where Tiny-RA was used without policy learning, the `--sops-mode` configuration was also set to `sops_ef_hf_ef`.
 
@@ -101,9 +101,9 @@ You can download `resnet50-das.42` from [Mendeley Data](https://data.mendeley.co
 
 <p align="center"><em>Figure 5. Step (6): The remaining samples are assigned to the validation set</em></p>
 
-## Section 4.1.2: Mean-teacher Performance of Two-stage Policies
+## Section 4.1.1: Mean-teacher Performance of Two-stage Policies
 
-**Table 4 Caption:** Individual policies ranked by average accuracy of the ResNET-34 model over 3 training runs with the setting {learning method: mean-teacher, augmenter: 2-stage policies, data: snacks (10%)}.
+**Table 4** Individual policies ranked by average accuracy of the ResNET-34 model over 3 training runs with the setting {learning method: mean-teacher, augmenter: 2-stage policies, data: snacks (10%)}.
 
 Onager command for seed 1000:
 
@@ -125,9 +125,9 @@ onager prelaunch +jobname mt_hard_1000 resnet50-das.42 --result-dir mt_search_ha
 python evaluate.py mt_search_hard_ops/1000 --exps 0..44 --get-results val
 ```
 
-## Section 4.1.4: Mixing Learned Policies with Adversarial and Random Policies
+## Section 4.1.2: Mixing Learned Policies with Adversarial and Random Policies
 
-**Figure 11 Caption:** Geometric and color operator distributions for min- and max-loss policies.
+**Figure 11.** Geometric and color operator distributions for min- and max-loss policies.
 
 **Figure 11 (a)** Min-loss Policy
 
@@ -153,35 +153,38 @@ python train.py *** --t-params-advers
 
 - A slight entropy regularization on parameters of geom. operations as their distribution can become rapidly peaked in some configurations (`--t-params-lambda-ent`).
 
-**Figure 12 Caption:** Geometric and color operator distributions under the policy-mixing strategy for (a) min-/max-loss mixing and (b) min-loss/random mixing. The mixing factor $\alpha$ is swept over {0.0, 0.2, 0.4, 0.6, 0.8, 1.0}. $\alpha^*$ indicates maximum entropy point.
+**Figure 13.** Test set accuracy of policy mixtures on CIFAR-10.
 
-**Figure 12 (a)** Mixing min-loss policy and max-loss policy.
+**Figure 13 (a)** Min-/max-loss Policy Mixture
 
 Onager command for mixture rate (-amr) 0.0:
 ```bash
 onager prelaunch +jobname amr_0r +command "python train.py cifar10 --result-dir amr_cifar10/0r --arch resnet34 \
---ftune-head fcn --learning-method policy-evaluate -bs 64 --optimizer SGD -lr 1e-2 --lr-sched -es --patience 1.2 \
+--ftune-head fcn --learning-method policy-evaluate -e 75 -bs 64 --optimizer SGD -lr 1e-2 --lr-sched -es --patience 1.2 \
 --consistency 0 --num-workers 8 -nl 0.2 --sops-mode sops_hf_hf_hf --iters-per-epoch 157 \
---t-probs-exp policy_learn/000 --t-adv-probs-exp policy_learn/001 -e 75 -amr 0.0" \
+--t-probs-exp policy_learn/000 --t-adv-probs-exp policy_learn/001 -amr 0.0" \
 +arg --seed 1000 1001 1002 1003 1004 1005 1006
 ```
 
-**Figure 12 (b)** Mixing min-loss policy and random policy.
+**Figure 13 (b)** Min-loss/Random Policy Mixture
 
 Onager command for mixture rate (-amr) 0.2:
 ```bash
 onager prelaunch +jobname rmr_20r +command "python train.py cifar10 --result-dir amr_cifar10/20r \
-*** --t-probs-exp policy_learn/000 --t-adv-probs-exp policy_learn/002 -e 75 -amr 0.2" \
+*** --t-probs-exp policy_learn/000 --t-adv-probs-exp policy_learn/002 -amr 0.2" \
 +arg --seed 1000 1001 1002 1003 1004 1005 1006
 ```
 
-- 6 onager sessions over `-amr={0.0,0.2,0.4,0.6,0.8,1.0}`
+- 6 onager sessions over `-amr={0.0,0.2,0.4,0.6,0.8,1.0}`. Policy-mixing evaluated at some intermediate values for Figure 13(b): `-amr={0.25,0.5,0.75}`.
 
-- *** holds overlapping parts to Figure 12(a) command. `--t-probs-exp` and `--t-adv-probs-exp` refers to learned policies from Figure 11's trainings. `--t-adv-probs-exp` refers to uniform distribution in Figure 12(b) (`policy_learn/002-randaug-cifar10`)
+- *** holds overlapping parts to Figure 13(a) command. `--t-probs-exp` and `--t-adv-probs-exp` refers to learned policies from Figure 11's trainings. In Figure 13(b), `--t-adv-probs-exp` refers to uniform distribution (`policy_learn/002-randaug-cifar10`)
 
 - We observed stable "U-shaped validation loss" pattern in supervised training on CIFAR10. Hence we turned on early-stopping (`-es`) in these experiments.
 
-- For faster experimentation, training was conducted on a 20% subset of CIFAR-10 (`-nl 0.2`).
+- For faster experimentation, training was conducted on a 20% split of CIFAR-10 (`-nl 0.2`).
+
+
+
 
 
 [^1]: Onager (https://github.com/camall3n/onager)

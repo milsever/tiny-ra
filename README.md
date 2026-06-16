@@ -119,7 +119,7 @@ onager prelaunch +jobname mt_hard_1000 resnet50-das.42 --result-dir mt_search_ha
 
 - Permutation sets at each session: `--color-op` = ["Bri", "Sat", "Con", "Hue", "Blur", "Sharp", "Post", "Solar", "Equal"], `--geom-op` = ["ShearX", "ShearY", "TranslateX", "TranslateY", "Rotate"]
 
-- **Aggregate Results:** Mean-teacher trainings (`--learning-method mean-teacher`) left a file in the run folder marking the `color-op` and the `geom-op` of the run: `T_{geom-op}_{color-op}`. `evaluate.py` scraps the operators from this file name. Call it in the following way to aggregate results in a single CSV file.
+- **Aggregate Results:** Mean-teacher trainings (`--learning-method mean-teacher`) left a file in the run folder marking the `color-op` and the `geom-op` of the run: `f"T_{geom-op}_{color-op}"`. `evaluate.py` scraps the operators from this file name. Call it in the following way to aggregate results in a single CSV file.
 
 ```bash
 python evaluate.py mt_search_hard_ops/1000 --exps 0..44 --get-results val
@@ -224,7 +224,21 @@ onager prelaunch +jobname retailyu_pl +command "python resnet50-das.42 --result-
 +arg --meta-cat cleaning drinks personalcare snacks
 ```
 
- - Single onager session (above command) for meta-categories of Retail-YU.
+- Single onager session (above command) for meta-categories of Retail-YU.
+
+**Figure 19.** Test accuracy of policy-mixing for each meta-category, labeled data ratio (10%, 5% and 1%), and mixing factor (α).
+
+Onager command for mixture rate 0.4 (`-amr 0.4`):
+```bash
+onager prelaunch +jobname 40r +command "python train.py resnet50-das.42 --result-dir rmr/40r \
+--arch resnet34 --learning-method policy-evaluate -e 120 -bs 16 -ubs 64 --optimizer SGD -lr 1e-2 --lr-sched \
+--ema-decay 0.99 --consistency-type mse --consistency 500 --consistency-rampup 10 --no-t-params-update \
+--num-workers 8 -nl 0.01 -nu 0.99 --sops-mode sops_ef_hf_ef --t-probs-exp policy_learn/009 \
+--t-adv-probs-exp policy_learn/003 -amr 0.4 --iters-per-epoch 200" \
++arg --meta-cat cleaning drinks personalcare snacks +arg -nl 0.1 0.05 0.01 +arg --seed {1000..1006}
+```
+
+- 6 onager sessions over `-amr={0.0,0.2,0.4,0.6,0.8,1.0}`.
 
 [^1]: Onager (https://github.com/camall3n/onager)
 

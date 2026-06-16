@@ -228,17 +228,20 @@ onager prelaunch +jobname retailyu_pl +command "python resnet50-das.42 --result-
 
 **Figure 19.** Test accuracy of policy-mixing for each meta-category, labeled data ratio (10%, 5% and 1%), and mixing factor (α).
 
-Onager command for cleaning meta-category and mixture rate 0.4 (`-amr 0.4`):
+Onager command for mixture rate 0.4 (`-amr 0.4`):
 ```bash
-onager prelaunch +jobname cle40r +command "python train.py resnet50-das.42 --result-dir rmr/cleaning/40r \
+onager prelaunch +jobname rmr_40r +command "python train.py resnet50-das.42 --result-dir rmr/40r \
 --arch resnet34 --learning-method policy-evaluate -e 120 -bs 16 -ubs 64 --optimizer SGD -lr 1e-2 --lr-sched \
 --ema-decay 0.99 --consistency-type mse --consistency 500 --consistency-rampup 10 --no-t-params-update \
---num-workers 8 --sops-mode sops_ef_hf_ef --t-probs-exp policy_learn/009 \
---t-adv-probs-exp policy_learn/003 --meta-cat cleaning -amr 0.4 --iters-per-epoch 200" \
-+arg -nl 0.1 0.05 0.01 +arg --seed {1000..1006}
+--num-workers 8 --sops-mode sops_ef_hf_ef --t-adv-probs-exp policy_learn/003 -amr 0.4 --iters-per-epoch 200" \
++arg --meta-cat "cleaning --t-probs-exp policy_learn/009" "drinks --t-probs-exp policy_learn/008" \
+"personalcare --t-probs-exp policy_learn/010" "snacks --t-probs-exp policy_learn/004" \
++arg -nl "0.1 -nu 0.9" "0.05 -nu 0.95" "0.01 -nu 0.99" +arg --seed {1000..1006}
 ```
 
-- 24 onager sessions over meta-categories and `-amr={0.0,0.2,0.4,0.6,0.8,1.0}`.
+- 6 onager sessions over `-amr={0.0,0.2,0.4,0.6,0.8,1.0}`.
+
+- In our enviroment, augmentation policies related to “cleaning,” “drinks,” “personal care,” and “snacks” meta-categories are experiments 008, 009, 010, and 004, respectively, located in the `policy_learn` folder. These should be replaced with the appropriate experiment numbers in a new environment.
 
 [^1]: Onager (https://github.com/camall3n/onager)
 

@@ -234,7 +234,7 @@ onager prelaunch +jobname cle40r +command "python train.py resnet50-das.42 --res
 --arch resnet34 --learning-method policy-evaluate -e 120 -bs 16 -ubs 64 --optimizer SGD -lr 1e-2 --lr-sched \
 --ema-decay 0.99 --consistency-type mse --consistency 500 --consistency-rampup 10 --no-t-params-update \
 --num-workers 8 --sops-mode sops_ef_hf_ef --t-probs-exp policy_learn/009 \
---t-adv-probs-exp policy_learn/003 -amr 0.4 --iters-per-epoch 200" \
+--t-adv-probs-exp policy_learn/003 --meta-cat cleaning -amr 0.4 --iters-per-epoch 200" \
 +arg -nl 0.1 0.05 0.01 +arg --seed {1000..1006}
 ```
 

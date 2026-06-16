@@ -2,6 +2,17 @@
 
 You can access data related to this paper on [Mendeley Data](https://data.mendeley.com/drafts/z6jdbh25gv).
 
+## Table of Contents
+
+- [Script Parameters](#script-parameters)
+- [--sops-mode parameter](#--sops-mode parameter)
+- [Script Parameter Permutations](#script-parameter-permutations)
+- [Distance-aware split of Retail-YU dataset](#distance-aware-split-of-retail-yu-dataset)
+- [Section 4.1.1: Mean-teacher Performance of Two-stage Policies](#section-411-mean-teacher-performance-of-two-stage-policies)
+- [Section 4.1.2: Mixing Learned Policies with Adversarial and Random Policies](#section-412-mixing-learned-policies-with-adversarial-and-random-policies)
+- [Section 4.2.3: Baseline: Tiny-RA without Policy Learning](#section-423-baseline-tiny-ra-without-policy-learning)
+- [Section 4.2.4: Tiny-RA with Policy Learning](#section-424tiny-ra-with-policy-learning)
+
 ## Script Parameters
 
 Positional (first) script parameter, `root`, serves two functions depending on whether `meta-cat` is defined. If `meta-cat` is not defined, `root` represents the `path to dataset` (for example `data/CIFAR10`). If `meta-cat` is defined, dataset is Retail-YU, and path to meta-category dataset is formed in the following way: `{retail_yu_root}/{meta_cat}/shelf/{root}`. `retail_yu_root` is defined in `trainer_base.py` and should be set before using the script. In this context `root` represents a specific split of the meta-category data. Distance-aware split (DAS) used in this study is discussed in the following section. It is coded as `resnet50-das.42`. For example, distance-aware split of the cleaning meta-category is defined by positional `root` and `meta-cat`: `python train.py resnet50-das.42 --meta-cat cleaning ...`

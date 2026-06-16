@@ -5,7 +5,7 @@ You can access data related to this paper on [Mendeley Data](https://data.mendel
 ## Table of Contents
 
 - [Script Parameters](#script-parameters)
-- [--sops-mode parameter](#--sops-mode parameter)
+- [--sops-mode parameter](#--sops-mode-parameter)
 - [Script Parameter Permutations](#script-parameter-permutations)
 - [Distance-aware split of Retail-YU dataset](#distance-aware-split-of-retail-yu-dataset)
 - [Section 4.1.1: Mean-teacher Performance of Two-stage Policies](#section-411-mean-teacher-performance-of-two-stage-policies)

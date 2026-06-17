@@ -23,7 +23,7 @@ Positional (first) script parameter, `root`, serves two functions depending on w
 
 ## `--sops-mode` parameter
 
-As described in Section 4.2.4, “Tiny-RA with Policy Learning,” Tiny-RA can be used at three different positions in the training pipeline, denoted as `aug_lbl`, `aug_stu`, and `aug_tea`. As pointed the paper, policy learning is applied to `aug_lbl` and `aug_tea`, but not to `aug_stu`. Although the results reported in the paper are based on this configuration, the training script provides more flexibility.
+As described in Section 4.2.4, “Tiny-RA with Policy Learning,” Tiny-RA can be used at three different positions in the training pipeline, denoted as `aug_lbl`, `aug_stu`, and `aug_tea`. As pointed in the paper, policy learning is applied to `aug_lbl` and `aug_tea`, but not to `aug_stu`. Although the results reported in the paper are based on this configuration, the training script provides more flexibility.
 
 The `--sops-mode` parameter specifies whether Tiny-RA is fixed or learned at each position and also controls its strength using two settings: *easy* and *hard*. Here, **SOPS** refers to “single operation per sample,” another naming for Tiny_RA which emphasizes that a different operation is applied to each sample. The `--sops-mode` argument follows the format `sops_{aug_lbl_mode}_{aug_stu_mode}_{aug_tea_mode}`. Each mode is represented by two letters. The first letter indicates the strength of Tiny-RA: ‘e’ denotes *easy*, in which the selected operation is applied with a probability of 50%, whereas ‘h’ denotes *hard*, in which the selected operation is always applied. The second letter indicates whether the policy is fixed or learned: ‘f’ denotes a fixed policy without policy learning, while ‘l’ denotes a learned policy.
 
